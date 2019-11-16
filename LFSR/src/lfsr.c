@@ -21,9 +21,22 @@ uint16_t get_random() {
     return (shift_lsfr(&lfsr32, POLY_MASK_32) ^ shift_lsfr(&lfsr31, POLY_MASK_31)) & 0xffff;
 }
 
+uint16_t * get_random_array() {
+    static uint16_t r[10];
+
+    for (int i = 0; i < 10; ++i) {
+      r[i] = get_random();
+   }
+}
+
 int main() {
     uint16_t random_value;
+    uint16_t *p;
     init_lfsrs();
     random_value = get_random();
-    printf("%d\n", random_value);
+    
+    p = get_random_array();
+    for ( int i = 0; i < 10; i++ ) {
+      printf("%d\n", p[i]);
+   }
 }

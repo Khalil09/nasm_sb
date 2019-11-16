@@ -1,42 +1,58 @@
 #include "../header/lfsr.h"
+#define NUMBER_OF_CLASSES 64
+#define SIZE_OF_INTERVAL 1024
+#define SEED 0x13131
+#define MASK 0x00FFFFFF
 
-uint16_t shift_lsfr(uint16_t *lfsr, uint16_t mask){
-    int feedback;
+int classes[NUMBER_OF_CLASSES];
+double chi_value[NUMBER_OF_CLASSES];
+double distChi = 0;
 
-    feedback = *lfsr & 1;
-    *lfsr >>= 1;
-    if (feedback == 1) {
-        *lfsr ^= mask;
-    }
-    return *lfsr;
+void separadorClasses(uint32_t random) {
+  uint32_t temp = (random/SIZE_OF_INTERVAL);
+  classes[temp]++;
 }
 
-void init_lfsrs() {
-    lfsr32 = 0xABCDE;
-    lfsr31 = 0x23456789;
+void frequenciaChiQuad(){
+  double aux =0;
+
+  for (int i = 0;  i < NUMBER_OF_CLASSES; i++) {
+    aux = (pow((classes[i]-SIZE_OF_INTERVAL),2))/SIZE_OF_INTERVAL;
+    chi_value[i] = aux;
+
+    distChi += chi_value[i];
+  }
 }
 
-uint16_t get_random() {
-    shift_lsfr(&lfsr32, POLY_MASK_32);
-    return (shift_lsfr(&lfsr32, POLY_MASK_32) ^ shift_lsfr(&lfsr31, POLY_MASK_31)) & 0xffff;
+void lfsr(){
+  unsigned long int cont = 0;
+  uint32_t start_state = SEED;
+  uint32_t lfsr = start_state;
+  uint32_t bit;
+  unsigned period = 0;
+
+  while (cont != 65536) {
+      bit  = ((lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 4) ^ (lfsr >> 13)) & 1;
+      lfsr =  (lfsr >> 1) | (bit << 15);
+      ++period;
+      cont++;
+      lfsr = lfsr & MASK;
+      separadorClasses(lfsr);
+  }
+
+  printf("=======> Foi gerado %lu números <=======\n", cont);
 }
 
-uint16_t * get_random_array() {
-    static uint16_t r[10];
+int main(void){
+  memset(chi_value, 0, sizeof(chi_value));
+  memset(classes, 0, sizeof(classes));
+  lfsr();
+  frequenciaChiQuad();
+  for (int i = 0; i < NUMBER_OF_CLASSES; i++) {
+    printf("\tclasse %d: valor chi é %lf com %d números\n",i,chi_value[i], classes[i]);
+  }
 
-    for (int i = 0; i < 10; ++i) {
-      r[i] = get_random();
-   }
-}
+  printf("\n======> Valor final do chi quadrado é %lf <========\n", distChi);
 
-int main() {
-    uint16_t random_value;
-    uint16_t *p;
-    init_lfsrs();
-    random_value = get_random();
-    
-    p = get_random_array();
-    for ( int i = 0; i < 10; i++ ) {
-      printf("%d\n", p[i]);
-   }
+  return 0;
 }

@@ -13,12 +13,12 @@ INC := -I include
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	@echo "$(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ build/test.o -o $(TARGET) $(LIB)
+	@echo "$(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ build/lfsr_nasm.o -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
-	nasm -f macho32 assembly/test.asm -o build/test.o
-	@echo "$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $< build/test.o
+	nasm -f elf32 assembly/lfsr_nasm.asm -o build/lfsr_nasm.o
+	@echo "$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 
 clean:

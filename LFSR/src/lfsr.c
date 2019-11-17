@@ -1,16 +1,10 @@
 #include "../header/lfsr.h"
-#define NUMBER_OF_CLASSES 64
-#define SIZE_OF_INTERVAL 1024
-#define SEED 0x13131
-#define MASK 0x00FFFFFF
 
-int classes[NUMBER_OF_CLASSES];
-double chi_value[NUMBER_OF_CLASSES];
-double distChi = 0;
-
-void separadorClasses(uint32_t random) {
-    uint32_t temp = (random/SIZE_OF_INTERVAL);
-    classes[temp]++;
+void separadorClasses(int cont) {
+    for(int i=0;i<cont;i++){
+        uint32_t temp = (lfsr_nums[i]/SIZE_OF_INTERVAL);
+        classes[temp]++;
+    }
 }
 
 void frequenciaChiQuad(){
@@ -24,30 +18,30 @@ void frequenciaChiQuad(){
     }
 }
 
-void lfsr(){
+int lfsr(){
     unsigned long int cont = 0;
     uint32_t start_state = SEED;
     uint32_t lfsr = start_state;
     uint32_t bit;
-    unsigned period = 0;
 
     while (cont != 65536) {
       bit  = ((lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 4) ^ (lfsr >> 13)) & 1;
       lfsr =  (lfsr >> 1) | (bit << 15);
-      ++period;
-      cont++;
       lfsr = lfsr & MASK;
-      separadorClasses(lfsr);
+      lfsr_nums[cont] = lfsr;
+      cont++;
     }
 
-    printf("=======> Foi gerado %lu números <=======\n", cont);
+    return cont;
 }
 
 int main(void){
     printf("%d\n", _test (85,5));
     memset(chi_value, 0, sizeof(chi_value));
     memset(classes, 0, sizeof(classes));
-    lfsr();
+    int cont = lfsr();
+    separadorClasses(cont);
+    printf("=======> Foi gerado %lu números <=======\n", cont);
     frequenciaChiQuad();
     for (int i = 0; i < NUMBER_OF_CLASSES; i++) {
     printf("\tclasse %d: valor chi é %lf com %d números\n",i,chi_value[i], classes[i]);

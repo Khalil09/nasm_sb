@@ -6,6 +6,8 @@
 #include <math.h>
 #include <string.h>
 
+extern unsigned int _test (unsigned int, unsigned int);
+
 void inicializaClasses();
 void inicializaChiQuad();
 void calcFreq();

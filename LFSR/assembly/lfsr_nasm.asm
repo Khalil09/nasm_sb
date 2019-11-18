@@ -2,8 +2,10 @@ section .text
 global lfsr_nasm
 
 lfsr_nasm:
-    push dword ebx;
-    mov esi, edi ; vec
+    push ebx;
+    push edi
+    push esi
+    mov esi, [esp+16] ; vec
     mov eax, 0 ;Cont = 0
     mov ebx, 0x1313 ; lfst = start_state = seed
     do:
@@ -22,9 +24,12 @@ lfsr_nasm:
         shr ebx, 1 ;lfsr >> 1
         shl ecx, 23 ; bit << 15
         or ebx, ecx ; lfsr = (lfsr >> 1) | (bit << 15);
-        mov dword [esi + 4 * eax], ebx
+        add esi, 4
+        mov dword [esi-4], ebx
         inc eax ; cont++
         cmp eax, 16777216; cont != 65536
         jne do ;
-    pop dword ebx;
+    pop esi
+    pop edi
+    pop ebx;
     ret

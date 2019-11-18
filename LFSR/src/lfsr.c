@@ -44,17 +44,11 @@ int main(int argc, char *argv[]){
         cont = lfsr_nasm(lfsr_nums);
         end = clock();
         printf("Dez primeiros numeros aleatorios: \n");
-        for(int i = 0; i < 10; i++){
-            printf("%d ", lfsr_nums[i]);
-        }
     } else {
         start = clock();
         cont = lfsr();
         end = clock();
         printf("Dez primeiros numeros aleatorios: \n");
-        for(int i = 0; i < 10; i++){
-            printf("%d ", lfsr_nums[i]);
-        }
     }
     separadorClasses(cont);
     printf("\n=======> Foram gerados %d números <=======\n", cont);

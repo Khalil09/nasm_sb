@@ -22,7 +22,7 @@ lfsr_nasm:
         shr ebx, 1 ;lfsr >> 1
         shl ecx, 23 ; bit << 15
         or ebx, ecx ; lfsr = (lfsr >> 1) | (bit << 15);
-        mov dword [esi + eax], ebx
+        mov dword [esi + 4 * eax], ebx
         inc eax ; cont++
         cmp eax, 16777216; cont != 65536
         jne do ;

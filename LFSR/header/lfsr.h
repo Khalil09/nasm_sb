@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 #define NUMBER_OF_CLASSES 16
 #define SIZE_OF_INTERVAL 1048576

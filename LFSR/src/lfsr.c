@@ -35,30 +35,37 @@ int lfsr(){
 }
 
 int main(int argc, char *argv[]){
+    clock_t start, end;
     int cont;
     memset(chi_value, 0, sizeof(chi_value));
     memset(classes, 0, sizeof(classes));
     if(argc == 2) {
+        start = clock();
         cont = lfsr_nasm(lfsr_nums);
-        // for(int i = 0; i < 2; i++){
-        //     printf("%d ", lfsr_nums[i]);
-        // }
-        printf("\nNum = %d\n", cont);
-    } else {
-        cont = lfsr();
-        for(int i = 0; i < 16777216; i++){
+        end = clock();
+        printf("Dez primeiros numeros aleatorios: \n");
+        for(int i = 0; i < 10; i++){
             printf("%d ", lfsr_nums[i]);
         }
-        printf("\nNum = %d\n", lfsr_nums[0]);
+    } else {
+        start = clock();
+        cont = lfsr();
+        end = clock();
+        printf("Dez primeiros numeros aleatorios: \n");
+        for(int i = 0; i < 10; i++){
+            printf("%d ", lfsr_nums[i]);
+        }
     }
     separadorClasses(cont);
-    printf("=======> Foram gerados %lu números <=======\n", cont);
+    printf("\n=======> Foram gerados %d números <=======\n", cont);
     frequenciaChiQuad();
     for (int i = 0; i < NUMBER_OF_CLASSES; i++) {
     printf("\tclasse %d: valor chi é %lf com %d números\n",i,chi_value[i], classes[i]);
-    }
+}
 
     printf("\n======> Valor final do chi quadrado é %lf <========\n", distChi);
+
+    printf("Tempo Usado %lf\n", ((double)(end - start)) / CLOCKS_PER_SEC );
 
     return 0;
 }

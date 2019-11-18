@@ -19,7 +19,7 @@ void frequenciaChiQuad(){
 }
 
 int lfsr(){
-    unsigned long int cont = 0;
+    int cont = 0;
     uint16_t start_state = SEED;
     uint16_t lfsr = start_state;
     uint16_t bit;
@@ -27,7 +27,6 @@ int lfsr(){
     while (cont != 65536) {
       bit  = ((lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 4) ^ (lfsr >> 13)) & 1;
       lfsr = (lfsr >> 1) | (bit << 15);
-      lfsr = lfsr & MASK;
       lfsr_nums[cont] = lfsr;
       cont++;
     }
@@ -35,19 +34,26 @@ int lfsr(){
     return cont;
 }
 
-int main(void){
-    printf("%d\n", _test (85,5));
+int main(int argc, char *argv[]){
+    int cont;
+    // printf("%d\n", _test (85,5));
     memset(chi_value, 0, sizeof(chi_value));
     memset(classes, 0, sizeof(classes));
-    int cont = lfsr();
-    separadorClasses(cont);
-    printf("=======> Foi gerado %lu números <=======\n", cont);
-    frequenciaChiQuad();
-    for (int i = 0; i < NUMBER_OF_CLASSES; i++) {
-    printf("\tclasse %d: valor chi é %lf com %d números\n",i,chi_value[i], classes[i]);
+    if(argc == 2) {
+        cont =  lfsr_nasm();
+        printf("%d\n", cont);
+        return;
+    } else {
+        cont = lfsr();
     }
-
-    printf("\n======> Valor final do chi quadrado é %lf <========\n", distChi);
+    // separadorClasses(cont);
+    // printf("=======> Foi gerado %lu números <=======\n", cont);
+    // frequenciaChiQuad();
+    // for (int i = 0; i < NUMBER_OF_CLASSES; i++) {
+    // printf("\tclasse %d: valor chi é %lf com %d números\n",i,chi_value[i], classes[i]);
+    // }
+    //
+    // printf("\n======> Valor final do chi quadrado é %lf <========\n", distChi);
 
     return 0;
 }

@@ -11,22 +11,22 @@ void frequenciaChiQuad(){
     double aux =0;
 
     for (int i = 0;  i < NUMBER_OF_CLASSES; i++) {
-    aux = (pow((classes[i]-SIZE_OF_INTERVAL),2))/SIZE_OF_INTERVAL;
-    chi_value[i] = aux;
+        aux = (pow((classes[i]-SIZE_OF_INTERVAL),2))/SIZE_OF_INTERVAL;
+        chi_value[i] = aux;
 
-    distChi += chi_value[i];
+        distChi += chi_value[i];
     }
 }
 
 int lfsr(){
     unsigned long int cont = 0;
-    uint32_t start_state = SEED;
-    uint32_t lfsr = start_state;
-    uint32_t bit;
+    uint16_t start_state = SEED;
+    uint16_t lfsr = start_state;
+    uint16_t bit;
 
     while (cont != 65536) {
       bit  = ((lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 4) ^ (lfsr >> 13)) & 1;
-      lfsr =  (lfsr >> 1) | (bit << 15);
+      lfsr = (lfsr >> 1) | (bit << 15);
       lfsr = lfsr & MASK;
       lfsr_nums[cont] = lfsr;
       cont++;

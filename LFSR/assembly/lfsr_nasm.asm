@@ -10,24 +10,24 @@ lfsr_nasm:
     mov ebx, 0x1313 ; lfst = start_state = seed
     do:
         mov ecx, ebx ; ecx = lfst
-        shr ecx, 1 ; lfsr >> 2
+        shr ecx, 1 ; lfsr >> 1
         mov edx, ebx ; edx = lfst
-        shr edx, 5; lfst >> 3
-        xor ecx, edx ; lfst >> 2 ^ lfsr >> 3
+        shr edx, 5; lfst >> 5
+        xor ecx, edx ; lfst >> 1 ^ lfsr >> 5
         mov edx, ebx ; edx = lfsr
-        shr edx, 7 ; edx = lfst >> 4
-        xor ecx, edx; lfst >> 2 ^ lfsr >> 3 ^ lfsr >> 4
+        shr edx, 7 ; edx = lfst >> 7
+        xor ecx, edx; lfst >> 1 ^ lfsr >> 5 ^ lfsr >> 7
         mov edx, ebx ; edx = lfsr
         shr edx, 13 ; edx = lfst >> 13
-        xor ecx, edx; lfst >> 2 ^ lfsr >> 3 ^ lfsr >> 4 ^ lfsr >> 13
+        xor ecx, edx; lfst >> 1 ^ lfsr >> 5 ^ lfsr >> 7 ^ lfsr >> 13
         and ecx, 1 ;ecx = bit
         shr ebx, 1 ;lfsr >> 1
-        shl ecx, 23 ; bit << 15
-        or ebx, ecx ; lfsr = (lfsr >> 1) | (bit << 15);
+        shl ecx, 23 ; bit << 23
+        or ebx, ecx ; lfsr = (lfsr >> 1) | (bit << 23);
         add esi, 4
         mov dword [esi-4], ebx
         inc eax ; cont++
-        cmp eax, 16777216; cont != 65536
+        cmp eax, 16777216; cont != 16777216
         jne do ;
     pop esi
     pop edi
